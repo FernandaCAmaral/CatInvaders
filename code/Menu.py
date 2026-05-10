@@ -1,6 +1,5 @@
 import pygame
 from pygame import Rect
-from pygame.font import Font
 from pygame.surface import Surface
 
 
@@ -44,17 +43,33 @@ class Menu:
 
             # Exibe as opçoes do menu
             self.menu_text (self.font_titulo,"Cat Invaders",(0, 102, 51),pos_titulo)
-            self.menu_text(self.font_botoes, "Iniciar", (0, 0, 0), pos_iniciar, True)
-            self.menu_text(self.font_botoes, "Score", (0, 0, 0), pos_score, True)
-            self.menu_text(self.font_botoes, "Como Jogar", (0, 0, 0), pos_como_jogar, True)
-            self.menu_text(self.font_botoes, "Sair", (0, 0, 0), pos_sair, True)
+            rect_iniciar = self.menu_text(self.font_botoes, "Iniciar", (0, 0, 0), pos_iniciar, True)
+            rect_score = self.menu_text(self.font_botoes, "Score", (0, 0, 0), pos_score, True)
+            rect_tutorial = self.menu_text(self.font_botoes, "Como Jogar", (0, 0, 0), pos_como_jogar, True)
+            rect_sair = self.menu_text(self.font_botoes, "Sair", (0, 0, 0), pos_sair, True)
             pygame.display.flip()  # Atualiza na tela
 
-            #Checagem de eventos
+            # Checagem de eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit() # Fecha a janela
                     quit() # Encerra o pygame
+
+                # Pega a posição do Mouse
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:  # Botão esquerdo do mouse
+                        mouse_pos = event.pos
+
+                        # Checagem de cliques
+                        if rect_iniciar.collidepoint(mouse_pos):
+                            return "JOGAR"
+                        elif rect_score.collidepoint(mouse_pos):
+                            return "SCORE"
+                        elif rect_tutorial.collidepoint(mouse_pos):
+                            return "TUTORIAL"
+                        elif rect_sair.collidepoint(mouse_pos):
+                            return "SAIR"
+
 
     def menu_text(self, font, text: str, text_color: tuple, text_center_pos: tuple, is_button: bool = False):
 
@@ -63,10 +78,11 @@ class Menu:
 
         # Verifica se o mouse está colidindo com o retângulo do texto
         if is_button and text_rect.collidepoint(pygame.mouse.get_pos()):
-            # Muda a cor se o mouse estiver em cima (ex: fica amarelo)
+            # Muda a cor se o mouse estiver em cima (ex: fica cinza)
             text_surf = font.render(text, True, (64, 64, 64))
 
         self.window.blit(source=text_surf, dest=text_rect)
+        return text_rect
 
 
     # Cria uma caixa para englobar as opções do menu
