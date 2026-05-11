@@ -1,4 +1,6 @@
 from code.Background import Background
+from code.Player import Player
+
 class EntityFactory:
 
     @staticmethod
@@ -9,5 +11,6 @@ class EntityFactory:
                 # Cria: Level1Bg0, Level1Bg1, Level1Bg2,
                 for i in range(5):
                     list_bg.append(Background(f'Level1Bg{i}', (0,0)))
-                    print(f'imagem {i} carregada com sucesso')
                 return list_bg
+            case 'Player':
+                return Player('Player', (0,0))

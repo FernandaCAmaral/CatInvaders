@@ -6,7 +6,7 @@ import pygame
 class Game:
     def __init__(self):
         pygame.init()
-        self.window = pygame.display.set_mode((700, 500))
+        self.window = pygame.display.set_mode((900, 500))
 
 
     def run(self):
@@ -24,9 +24,3 @@ class Game:
             elif resultado == "SAIR":
                 pygame.quit()
                 exit()
-
-            #Checagem de eventos
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit() # Fecha a janela
-                    quit() # Encerra o pygame
