@@ -5,6 +5,9 @@ class Player(Entity):
     def __init__(self, name, position):
         super().__init__(name, position)
         self.speed = 4
+        self.last_hit_time = 0
+        self.invincibility_duration = 1500
+        self.health = 100
         # Define o ponto inicial fora da tela, à esquerda para a entrada
         self.rect.x = -80
         self.rect.y = 340  # Posição inicial no gramado

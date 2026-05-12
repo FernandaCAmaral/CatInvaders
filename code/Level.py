@@ -17,6 +17,10 @@ class Level:
         self.entity_list.append(self.player)
 
         # Coinfiguração do Spawn dos inimigos
+        self.spawn_limit = 10  # Número total de inimigos na fase
+        self.spawn_count = 0  # Contador de quantos já nasceram
+        self.enemies_list = []  # Lista específica para facilitar colisões
+        self.level_finished = False  # Para saber se a fase acabou
         self.SPAWN_ENEMY_EVENT = pygame.USEREVENT + 1
         pygame.time.set_timer(self.SPAWN_ENEMY_EVENT, 3000) # Dispara o evento a cada 2000ms (2 segundos)
 
@@ -35,17 +39,34 @@ class Level:
                     sys.exit()
 
                 if event.type == self.SPAWN_ENEMY_EVENT:
-                    # Pedimos um inimigo novo para a Factory
-                    new_enemy = EntityFactory.get_entity('Enemy1')
-                    self.entity_list.append(new_enemy)
+                    if self.spawn_count < self.spawn_limit:
+                        new_enemy = EntityFactory.get_entity('Enemy1')
+                        self.enemies_list.append(new_enemy)
+                        self.entity_list.append(new_enemy)
+                        self.spawn_count += 1
+                    else:
+                        # Para o timer para economizar processamento
+                        pygame.time.set_timer(self.SPAWN_ENEMY_EVENT, 0)
 
             for entity in self.entity_list:
                 entity.move()
                 # Se o inimigo saiu totalmente da tela pela esquerda
                 if entity.name == 'Enemy1walk' and entity.rect.right < 0:
+                    if entity in self.enemies_list:
+                        self.enemies_list.remove(entity)
                     self.entity_list.remove(entity)
 
+            # --- DETECÇÃO DE COLISÃO ---
+            self.check_collisions()
+
             for entity in self.entity_list:
+                # Se for o Player, vamos checar se ele deve piscar
+                if entity == self.player:
+                    current_time = pygame.time.get_ticks()
+                    # Se estiver no período de invencibilidade pisca a cada 100ms
+                    if current_time - self.player.last_hit_time < self.player.invincibility_duration:
+                        if (current_time // 100) % 2 == 0:
+                            continue
                 self.window.blit(entity.surface, entity.rect)
 
             self.level_text(self.font_level, f'fps: {clock.get_fps():.0f}', (255, 255, 255),(10, self.window_height - 10))
@@ -56,3 +77,13 @@ class Level:
         text_rect: Rect = text_surf.get_rect(bottomleft=text_pos)
         self.window.blit(source=text_surf, dest=text_rect)
         return text_rect
+
+    def check_collisions(self):
+        current_time = pygame.time.get_ticks()
+        # Usamos a lista auxiliar para colisão do Player com o Enemy
+        for enemy in self.enemies_list:
+            if self.player.rect.colliderect(enemy.rect):
+                if current_time - self.player.last_hit_time > self.player.invincibility_duration:
+                    print(f"O gatinho levou {enemy.damage} de dano!")
+                    self.player.health -= enemy.damage
+                    self.player.last_hit_time = current_time  # Reseta o timer de proteção
