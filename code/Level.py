@@ -24,8 +24,8 @@ class Level:
         self.level_finished = False  # Para saber se a fase acabou
         self.SPAWN_ENEMY_EVENT = pygame.USEREVENT + 1
         pygame.time.set_timer(self.SPAWN_ENEMY_EVENT, 3000) # Dispara o evento a cada 2000ms (2 segundos)
-
-        self.mediator = EntityMediator(self.player, self.entity_list, self.enemies_list)
+        self.shots_list = []
+        self.mediator = EntityMediator(self.player, self.entity_list, self.enemies_list, self.shots_list)
 
         self.font_level = pygame.font.SysFont("Comic Sans MS", 16)
         self.window_height = self.window.get_height() # Pega a altura da janela para alocar dinamicamente os textos
@@ -53,6 +53,10 @@ class Level:
 
             for entity in self.entity_list:
                 entity.move()
+
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                self.player.shoot(self.entity_list, self.shots_list)
 
             self.mediator.update()
 

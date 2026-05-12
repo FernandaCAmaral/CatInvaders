@@ -1,5 +1,6 @@
 import pygame
 from code.Entity import Entity
+from code.PlayerShot import PlayerShot
 
 class Player(Entity):
     def __init__(self, name, position):
@@ -8,6 +9,10 @@ class Player(Entity):
         self.last_hit_time = 0
         self.invincibility_duration = 1500
         self.health = 100
+        # Configuração para o métdo shoot
+        self.shot_cooldown = 500  # Meio segundo entre tiros
+        self.last_shot_time = 0
+
         # Define o ponto inicial fora da tela, à esquerda para a entrada
         self.rect.x = -80
         self.rect.y = 340  # Posição inicial no gramado
@@ -48,13 +53,25 @@ class Player(Entity):
 
         # Define a imagem inicial
         self.surface = self.frames[0]
-        #self.rect = self.surface.get_rect()
 
     def animate(self):
         self.frame_index += self.animation_speed
         if self.frame_index >= len(self.frames):
             self.frame_index = 0
         self.surface = self.frames[int(self.frame_index)]
+
+    def shoot(self, entity_list, shots_list):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_shot_time > self.shot_cooldown:
+            # O tiro sai da frente do gatinho (meio da altura dele)
+            shot_x = self.rect.right + 15
+            shot_y = self.rect.centery + 18
+            new_shot = PlayerShot('PlayerShot', (shot_x, shot_y))
+
+            entity_list.append(new_shot)
+            shots_list.append(new_shot)
+
+            self.last_shot_time = current_time
 
     def move(self):
         is_moving = False
@@ -87,12 +104,12 @@ class Player(Entity):
         if self.rect.top < 100: self.rect.top = 100
         if self.rect.bottom > 400: self.rect.bottom = 400
         if self.rect.left < 0: self.rect.left = 0
-        if self.rect.right > 700: self.rect.right = 700
+        if self.rect.right > 900: self.rect.right = 900
 
         # ANIMAÇÃO
         if is_moving:
             self.animate()  # Só troca o frame se estiver andando
         else:
-            # Opcional: Se parado, volta para o frame 0 (posição de repouso)
+            # Se parado, volta para o frame 0 (posição de repouso)
             self.current_frame = 0
             self.surface = self.frames[0]
