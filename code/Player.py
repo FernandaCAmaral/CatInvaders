@@ -29,7 +29,6 @@ class Player(Entity):
         self.frame_index = 0.0
 
     def load_frames(self):
-        print(f"Tamanho da SpriteSheet carregada: {self.sprite_sheet.get_size()}")
         line_y = 192
 
         for i in range(8):
@@ -41,15 +40,12 @@ class Player(Entity):
             cropped_frame = temp_surface.subsurface(real_area)
 
             # Redimensionando para o gatinho não ficar minúsculo
-            final_frame = pygame.transform.scale(cropped_frame, (100, 100))
+            final_frame = pygame.transform.scale(cropped_frame, (90, 90))
             self.frames.append(final_frame)
 
         # Define a imagem inicial
         self.surface = self.frames[0]
-        # Se redimensionou acima, atualize o rect: self.rect = self.surface.get_rect()
-
-    def update(self):
-        pass
+        #self.rect = self.surface.get_rect()
 
     def animate(self):
         self.frame_index += self.animation_speed

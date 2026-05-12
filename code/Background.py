@@ -8,7 +8,6 @@ class Background(Entity):
         window_size = pygame.display.get_surface().get_size()
         self.surface = pygame.transform.scale(self.surface, window_size)
         self.rect = self.surface.get_rect(topleft=position)
-        print(f"Camada: {self.name} | Tamanho do Rect: {self.rect.size}")
 
     def move(self):
         pass

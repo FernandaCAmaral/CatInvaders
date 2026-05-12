@@ -1,4 +1,7 @@
+import random
+
 from code.Background import Background
+from code.Enemy import Enemy
 from code.Player import Player
 
 class EntityFactory:
@@ -14,3 +17,10 @@ class EntityFactory:
                 return list_bg
             case 'Player':
                 return Player('Player', (0,0))
+            case 'Enemy1':
+                return Enemy('Enemy1walk', (920, random.randint(110,390)), speed=1.5, damage=10)
+            case 'Enemy2':
+                return Enemy('Enemy2walk', position, speed=2, damage=20)
+            case 'Enemy3':
+                return Enemy('Enemy3walk', position, speed=3, damage=25)
+
