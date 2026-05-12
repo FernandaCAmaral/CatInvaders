@@ -4,6 +4,7 @@ from pygame.rect import Rect
 from pygame.surface import Surface
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
+from code.EntityMediator import EntityMediator
 
 class Level:
     def __init__(self, window, name):
@@ -23,6 +24,8 @@ class Level:
         self.level_finished = False  # Para saber se a fase acabou
         self.SPAWN_ENEMY_EVENT = pygame.USEREVENT + 1
         pygame.time.set_timer(self.SPAWN_ENEMY_EVENT, 3000) # Dispara o evento a cada 2000ms (2 segundos)
+
+        self.mediator = EntityMediator(self.player, self.entity_list, self.enemies_list)
 
         self.font_level = pygame.font.SysFont("Comic Sans MS", 16)
         self.window_height = self.window.get_height() # Pega a altura da janela para alocar dinamicamente os textos
@@ -50,14 +53,8 @@ class Level:
 
             for entity in self.entity_list:
                 entity.move()
-                # Se o inimigo saiu totalmente da tela pela esquerda
-                if entity.name == 'Enemy1walk' and entity.rect.right < 0:
-                    if entity in self.enemies_list:
-                        self.enemies_list.remove(entity)
-                    self.entity_list.remove(entity)
 
-            # --- DETECÇÃO DE COLISÃO ---
-            self.check_collisions()
+            self.mediator.update()
 
             for entity in self.entity_list:
                 # Se for o Player, vamos checar se ele deve piscar
@@ -78,12 +75,3 @@ class Level:
         self.window.blit(source=text_surf, dest=text_rect)
         return text_rect
 
-    def check_collisions(self):
-        current_time = pygame.time.get_ticks()
-        # Usamos a lista auxiliar para colisão do Player com o Enemy
-        for enemy in self.enemies_list:
-            if self.player.rect.colliderect(enemy.rect):
-                if current_time - self.player.last_hit_time > self.player.invincibility_duration:
-                    print(f"O gatinho levou {enemy.damage} de dano!")
-                    self.player.health -= enemy.damage
-                    self.player.last_hit_time = current_time  # Reseta o timer de proteção
