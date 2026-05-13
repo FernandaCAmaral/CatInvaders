@@ -16,7 +16,7 @@ class EntityMediator:
 
     def __check_collisions(self):
         current_time = pygame.time.get_ticks()
-        # Usamos a lista auxiliar para colisão do Player com o Enemy
+        # Usa a lista auxiliar para colisão do Player com o Enemy
         for enemy in self.enemies_list[:]:
             if self.player.rect.colliderect(enemy.rect):
                 # Lógica de Invencibilidade do Player

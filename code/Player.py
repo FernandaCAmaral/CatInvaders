@@ -9,6 +9,7 @@ class Player(Entity):
         self.last_hit_time = 0
         self.invincibility_duration = 1500
         self.health = 100
+        self.max_health = 100
         # Configuração para o métdo shoot
         self.shot_cooldown = 500  # Meio segundo entre tiros
         self.last_shot_time = 0

@@ -27,7 +27,8 @@ class Level:
         self.shots_list = []
         self.mediator = EntityMediator(self.player, self.entity_list, self.enemies_list, self.shots_list)
 
-        self.font_level = pygame.font.SysFont("Comic Sans MS", 16)
+        self.font_level = pygame.font.SysFont("Comic Sans MS", 18)
+        self.font_game_over = pygame.font.SysFont("Comic Sans MS", 40)
         self.window_height = self.window.get_height() # Pega a altura da janela para alocar dinamicamente os textos
 
     def run(self, ):
@@ -70,12 +71,69 @@ class Level:
                             continue
                 self.window.blit(entity.surface, entity.rect)
 
+            self.draw_health_bar()
+
+            if self.player.health <= 0:
+                pygame.mixer_music.stop()
+                self.show_game_over_screen()
+                break
+
             self.level_text(self.font_level, f'fps: {clock.get_fps():.0f}', (255, 255, 255),(10, self.window_height - 10))
             pygame.display.flip()
 
-    def level_text(self, font, text: str, text_color: tuple, text_pos: tuple):
+    def level_text(self, font, text: str, text_color: tuple, text_pos: tuple, center=False):
         text_surf: Surface = font.render(text, True, text_color).convert_alpha()
-        text_rect: Rect = text_surf.get_rect(bottomleft=text_pos)
+        if center:
+            text_rect = text_surf.get_rect(center=text_pos)
+        else:
+            text_rect: Rect = text_surf.get_rect(bottomleft=text_pos)
         self.window.blit(source=text_surf, dest=text_rect)
         return text_rect
 
+    def draw_health_bar(self):
+        # Configurações da barra de vida
+        bar_width = 200
+        bar_height = 20
+        x = 10
+        y = 50
+
+        # Calcula a proporção da vida
+        health_ratio = self.player.health / self.player.max_health
+
+        # Garante que a barra não fique "negativa" se a vida for menor que 0
+        if health_ratio < 0:
+            health_ratio = 0
+
+        # Desenhar o fundo da barra (barra vazia)
+        pygame.draw.rect(self.window, (100, 0, 0), (x, y, bar_width, bar_height))
+
+        # Desenha a vida atual
+        # A largura é o total disponível vezes a proporção da vida
+        pygame.draw.rect(self.window, (230, 0, 0), (x, y, bar_width * health_ratio, bar_height))
+
+        # Desenha uma borda branca para dar acabamento
+        pygame.draw.rect(self.window, (255, 255, 255), (x, y, bar_width, bar_height), 2)
+
+    def show_game_over_screen(self):
+        # Escurece a tela
+        overlay = pygame.Surface((self.window.get_width(), self.window.get_height()))
+        overlay.set_alpha(180)
+        overlay.fill((0, 0, 0))
+        self.window.blit(overlay, (0, 0))
+
+        # Loop de espera
+        while True:
+            # Textos centralizados
+            self.level_text(self.font_game_over, "GAME OVER!", (255, 50, 50), (450, 250), True)
+            self.level_text(self.font_level, "Pressione M para voltar ao Menu", (255, 255, 255), (450, 350), True)
+
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_m:  # M de Menu
+                        return  # Encerra o métdo e volta para o run()

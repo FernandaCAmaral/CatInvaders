@@ -7,7 +7,7 @@ class PlayerShot(Entity):
     def __init__(self, name , position):
         super().__init__(name, position)
         self.speed = 6
-        # Como não temos imagem, vamos criar uma superfície simples (ex: um tiro amarelo)
+
         if name == 'PlayerShot':
             self.surface = pygame.transform.scale(self.surface, (30, 20))
             self.rect = self.surface.get_rect(center=position)
