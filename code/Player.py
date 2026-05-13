@@ -48,7 +48,7 @@ class Player(Entity):
             real_area = temp_surface.get_bounding_rect()
             cropped_frame = temp_surface.subsurface(real_area)
 
-            # Redimensionando para o gatinho não ficar minúsculo
+            # Redimensionando para o player não ficar pequeno
             final_frame = pygame.transform.scale(cropped_frame, (90, 90))
             self.frames.append(final_frame)
 
@@ -105,7 +105,7 @@ class Player(Entity):
         if self.rect.top < 100: self.rect.top = 100
         if self.rect.bottom > 400: self.rect.bottom = 400
         if self.rect.left < 0: self.rect.left = 0
-        if self.rect.right > 900: self.rect.right = 900
+        if self.rect.right > 800: self.rect.right = 800
 
         # ANIMAÇÃO
         if is_moving:

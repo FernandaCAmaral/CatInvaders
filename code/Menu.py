@@ -29,9 +29,8 @@ class Menu:
         # Define as posições das opçoes do Menu em relação ao centro
         pos_titulo = (center_x, center_y - 80)
         pos_iniciar = (center_x, center_y)
-        pos_score = (center_x, center_y + 40)
-        pos_como_jogar = (center_x, center_y + 80)
-        pos_sair = (center_x, center_y + 120)
+        pos_como_jogar = (center_x, center_y + 40)
+        pos_sair = (center_x, center_y + 80)
 
         while True:
 
@@ -44,7 +43,6 @@ class Menu:
             # Exibe as opçoes do menu
             self.menu_text (self.font_titulo,"Cat Invaders",(0, 102, 51),pos_titulo)
             rect_iniciar = self.menu_text(self.font_botoes, "Iniciar", (0, 0, 0), pos_iniciar, True)
-            rect_score = self.menu_text(self.font_botoes, "Score", (0, 0, 0), pos_score, True)
             rect_tutorial = self.menu_text(self.font_botoes, "Como Jogar", (0, 0, 0), pos_como_jogar, True)
             rect_sair = self.menu_text(self.font_botoes, "Sair", (0, 0, 0), pos_sair, True)
             pygame.display.flip()  # Atualiza na tela
@@ -63,8 +61,6 @@ class Menu:
                         # Checagem de cliques
                         if rect_iniciar.collidepoint(mouse_pos):
                             return "JOGAR"
-                        elif rect_score.collidepoint(mouse_pos):
-                            return "SCORE"
                         elif rect_tutorial.collidepoint(mouse_pos):
                             return "TUTORIAL"
                         elif rect_sair.collidepoint(mouse_pos):
@@ -88,17 +84,16 @@ class Menu:
     # Cria uma caixa para englobar as opções do menu
     def draw_menu_box(self):
         # Define o tamanho da caixa
-        box_width = 400
-        box_height = 390
+        box_width = 350
+        box_height = 310
 
         # Centraliza a caixa na tela
         center_x, center_y = self.window.get_rect().center
         # Cria o Rect da caixa
         box_rect = pygame.Rect(0, 0, box_width, box_height)
-        box_rect.center = (center_x, center_y)  # Ajuste leve para baixo se quiser
+        box_rect.center = (center_x, center_y)
 
-        # Cria uma superfície com transparência
-        # Isso permite que o background apareça levemente atrás da caixa
+        # Cria uma superfície com transparência, permitindo que o background apareça atrás
         overlay = pygame.Surface((box_width, box_height), pygame.SRCALPHA)
 
         # Desenha o fundo da caixa (com 150 de opacidade)

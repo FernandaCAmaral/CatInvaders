@@ -11,8 +11,6 @@ class EntityMediator:
         self.__check_collisions()
         self.__check_bounds()
         self.__check_shot_impacts()
-        if self.player.health <= 0:
-            print("Game Over!")
 
     def __check_collisions(self):
         current_time = pygame.time.get_ticks()
@@ -23,7 +21,6 @@ class EntityMediator:
                 if current_time - self.player.last_hit_time > self.player.invincibility_duration:
                     self.player.health -= enemy.damage
                     self.player.last_hit_time = current_time # Reseta o timer de proteção
-                    print(f"Gatinho atingido! Vida: {self.player.health}")
 
     def __check_shot_impacts(self):
         for shot in self.shots_list[:]:
@@ -47,6 +44,6 @@ class EntityMediator:
                     self.enemies_list.remove(entity)
 
         for shot in self.shots_list[:]:
-            if shot.rect.left > 900:
+            if shot.rect.left > 800:
                 self.shots_list.remove(shot)
                 self.entity_list.remove(shot)
