@@ -4,6 +4,9 @@ from code.Menu import Menu
 
 import pygame
 
+from code.Tutorial import Tutorial
+
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -33,10 +36,10 @@ class Game:
                     else:
                         break # Se perdeu ou saiu, interrompe o loop de fases
 
-            elif resultado == "SCORE":
-                pass
             elif resultado == "TUTORIAL":
-                pass
+                tutorial = Tutorial(self.window)
+                tutorial.run()
+
             elif resultado == "SAIR":
                 pygame.quit()
                 exit()
