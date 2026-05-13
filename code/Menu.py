@@ -20,7 +20,7 @@ class Menu:
 
     def run(self):
         # Carrega e toca a música do Menu
-        pygame.mixer.music.load('assets/menu.mp3')
+        pygame.mixer.music.load('./assets/menu.mp3')
         pygame.mixer.music.play(-1)
 
         # Define o centro do Eixo X e Y

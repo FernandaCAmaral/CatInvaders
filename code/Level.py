@@ -20,7 +20,7 @@ class Level:
         self.player.rect.y = 340
         self.player.entering = True
 
-        # Coinfiguração do Spawn dos inimigos
+        # Configuração do Spawn dos inimigos
         self.spawn_limit = 15 # Número total de inimigos na fase
         self.spawn_count = 0  # Contador de quantos já nasceram
         self.enemies_list = []  # Lista específica para facilitar colisões
